@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{{ news.title }}</h2>
+  <div class="mb-2 text-muted">{{ news.pub_date|date:"d.m.Y H:i" }} | Категория: {{ news.category }} | Теги: {% for t in news.tags.all %}{{ t.name }} {% endfor %}</div>
+  {% if news.image %}
+    <img src="{{ news.image.url }}" class="img-fluid mb-3" style="max-height:300px;">
+  {% endif %}
+  <p>{{ news.text }}</p>
+  <div class="mb-2">Просмотров: {{ news.views_count }}</div>
+  {% if user.is_authenticated %}
+    {% if user == news.author or user.role == 'admin' %}
+      <a href="{% url 'news_edit' news.pk %}" class="btn btn-warning">Редактировать</a>
+      <a href="{% url 'news_delete' news.pk %}" class="btn btn-danger">Удалить</a>
+    {% endif %}
+    {% if is_watch_later %}
+      <a href="{% url 'remove_watch_later' news.pk %}" class="btn btn-secondary">Убрать из "Посмотреть позже"</a>
+    {% else %}
+      <a href="{% url 'add_watch_later' news.pk %}" class="btn btn-primary">В "Посмотреть позже"</a>
+    {% endif %}
+  {% endif %}
+  <a href="{% url 'news_list' %}" class="btn btn-link">Назад к списку</a>
+</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Посмотреть позже</h2>
+  <div class="list-group">
+    {% for n in news_list %}
+      <a href="{% url 'news_detail' n.pk %}" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+          <h5 class="mb-1">{{ n.title }}</h5>
+          <small>{{ n.pub_date|date:"d.m.Y H:i" }}</small>
+        </div>
+        <p class="mb-1">{{ n.text|truncatechars:120 }}</p>
+        <small>Категория: {{ n.category }} | Теги: {% for t in n.tags.all %}{{ t.name }} {% endfor %}| Просмотров: {{ n.views_count }}</small>
+      </a>
+    {% empty %}
+      <div class="alert alert-info">Список пуст</div>
+    {% endfor %}
+  </div>
+  <a href="{% url 'news_list' %}" class="btn btn-link mt-3">Назад к новостям</a>
+</div>
+{% endblock %}

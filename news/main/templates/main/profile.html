@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>Профиль</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label>Имя:</label>
+      <input type="text" name="first_name" value="{{ profile.first_name }}" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label>Фамилия:</label>
+      <input type="text" name="last_name" value="{{ profile.last_name }}" class="form-control">
+    </div>
+    <div class="mb-3">
+      <label>Контактная информация:</label>
+      <textarea name="contact_info" class="form-control">{{ profile.contact_info }}</textarea>
+    </div>
+    <div class="mb-3">
+      <label>Аватар:</label><br>
+      {% if profile.avatar %}
+        <img src="{{ profile.avatar.url }}" width="100"><br>
+      {% endif %}
+      <input type="file" name="avatar" class="form-control">
+    </div>
+    <button type="submit" class="btn btn-success">Сохранить</button>
+  </form>
+</div>
+{% endblock %}

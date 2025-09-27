@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>Новости</h2>
+  <div class="row">
+    <div class="col-md-3 mb-3">
+      <form method="get" class="card p-3">
+        <div class="mb-3">
+          <input type="text" name="q" value="{{ query }}" class="form-control" placeholder="Поиск...">
+        </div>
+        <div class="mb-3">
+          <select name="category" class="form-select">
+            <option value="">Категория</option>
+            {% for cat in categories %}
+              <option value="{{ cat.id }}" {% if cat.id|stringformat:'s' == category_id %}selected{% endif %}>{{ cat.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <select name="tag" class="form-select">
+            <option value="">Тег</option>
+            {% for tag in tags %}
+              <option value="{{ tag.id }}" {% if tag.id|stringformat:'s' == tag_id %}selected{% endif %}>{{ tag.name }}</option>
+            {% endfor %}
+          </select>
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Дата с:</label>
+          <input type="date" name="date_from" value="{{ date_from }}" class="form-control">
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Дата по:</label>
+          <input type="date" name="date_to" value="{{ date_to }}" class="form-control">
+        </div>
+        <button type="submit" class="btn btn-primary w-100">Фильтр</button>
+      </form>
+      {% if user.is_authenticated %}
+        <a href="{% url 'news_create' %}" class="btn btn-success w-100 mt-3">Добавить новость</a>
+        <a href="{% url 'watch_later_list' %}" class="btn btn-secondary w-100 mt-2">Посмотреть позже</a>
+      {% else %}
+        <div class="alert alert-warning mt-3">Войдите, чтобы добавить новость</div>
+      {% endif %}
+    </div>
+    <div class="col-md-9">
+      <div class="list-group">
+        {% for n in news_list %}
+          <a href="{% url 'news_detail' n.pk %}" class="list-group-item list-group-item-action">
+            <div class="d-flex w-100 justify-content-between">
+              <h5 class="mb-1">{{ n.title }}</h5>
+              <small>{{ n.pub_date|date:"d.m.Y H:i" }}</small>
+            </div>
+            <p class="mb-1">{{ n.text|truncatechars:120 }}</p>
+            <small>Категория: {{ n.category }} | Теги: {% for t in n.tags.all %}{{ t.name }} {% endfor %}| Просмотров: {{ n.views_count }}</small>
+          </a>
+        {% empty %}
+          <div class="alert alert-info">Нет новостей</div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+

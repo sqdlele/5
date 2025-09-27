@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-4">
+  <h2>{% if edit %}Редактировать новость{% else %}Добавить новость{% endif %}</h2>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <style>
+      textarea[maxlength], textarea[name=text] {
+        max-width: 600px;
+        width: 100%;
+      }
+    </style>
+    {{ form.as_p|safe }}
+    <button type="submit" class="btn btn-success">Сохранить</button>
+    <a href="{% url 'news_list' %}" class="btn btn-link">Назад</a>
+  </form>
+</div>
+{% endblock %}
